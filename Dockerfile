@@ -4,6 +4,8 @@ FROM openjdk:17
 # Add a volume to the /tmp directory
 VOLUME /tmp
 
+RUN mvn clean package
+
 # The application's jar file
 ARG JAR_FILE=target/*.jar
 

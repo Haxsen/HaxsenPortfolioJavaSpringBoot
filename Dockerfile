@@ -1,16 +1,10 @@
-# Use an official OpenJDK runtime as the base image
+FROM maven:3.8.4-openjdk-17 AS builder
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Stage 2: Copy the built app
 FROM openjdk:17
-
-# Add a volume to the /tmp directory
-VOLUME /tmp
-
-RUN mvn clean package
-
-# The application's jar file
-ARG JAR_FILE=target/*.jar
-
-# Add the application's jar to the container
-COPY ${JAR_FILE} app.jar
-
-# Run the jar file
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
